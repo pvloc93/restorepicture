@@ -23,6 +23,10 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: "Chưa cấu hình REPLICATE_API_TOKEN trên Vercel." });
     }
 
+    if (!image) {
+        return res.status(400).json({ error: "Không tìm thấy dữ liệu ảnh." });
+    }
+
     try {
         // Gửi ảnh sang AI CodeFormer
         const response = await fetch("https://api.replicate.com/v1/predictions", {
@@ -34,8 +38,8 @@ export default async function handler(req, res) {
             body: JSON.stringify({
                 version: "7de2ea26c616d5bf2245ad0d5e24f0ff9a6204578a5c876db53142edd9d2cd56",
                 input: {
-                    image: `data:image/png;base64,${image}`,
-                    codeformer_fidelity: 0.9, // Ép AI giữ 90% khuôn mặt gốc
+                    image: `data:image/jpeg;base64,${image}`, // Đổi sang jpeg vì Frontend đang gửi jpeg
+                    codeformer_fidelity: 0.9, 
                     background_enhance: true,
                     face_upsample: true,
                     upscale: 2
@@ -68,6 +72,17 @@ export default async function handler(req, res) {
         res.status(200).json({ restoredImageUrl: prediction.output });
 
     } catch (error) {
+        console.error("Lỗi Backend:", error);
         res.status(500).json({ error: error.message });
     }
 }
+
+// --- 4. CẤU HÌNH QUAN TRỌNG: TĂNG GIỚI HẠN DUNG LƯỢNG PAYLOAD ---
+// Mặc định Vercel chỉ cho phép 1MB. Đoạn này tăng lên 4MB để nhận chuỗi Base64
+export const config = {
+    api: {
+        bodyParser: {
+            sizeLimit: '4mb', 
+        },
+    },
+};

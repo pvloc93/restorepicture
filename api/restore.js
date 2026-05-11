@@ -39,10 +39,10 @@ export default async function handler(req, res) {
                 version: "7de2ea26c616d5bf2245ad0d5e24f0ff9a6204578a5c876db53142edd9d2cd56",
                 input: {
                     image: `data:image/jpeg;base64,${image}`, // Đổi sang jpeg vì Frontend đang gửi jpeg
-                    codeformer_fidelity: 0.95, 
+                    codeformer_fidelity: 0.9, 
                     background_enhance: true,
                     face_upsample: true,
-                    upscale: 2
+                    upscale: 1
                 }
             })
         });

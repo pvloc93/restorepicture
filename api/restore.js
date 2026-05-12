@@ -42,7 +42,7 @@ export default async function handler(req, res) {
                     codeformer_fidelity: 0.9, 
                     background_enhance: true,
                     face_upsample: true,
-                    upscale: 1
+                    upscale: 2
                 }
             })
         });
